@@ -55,7 +55,7 @@ function addMovieToList(movie) {
     movieItem.appendChild(movieTitle);
     movieList.appendChild(movieItem);
     movieItem.addEventListener("click", () => {
-        window.location.href = `MovieTemplate.html?id=${movie.id}`;
+        window.location.href = `movie.html?id=${movie.id}`;
     });
 }
 function populateMovieList(movies) {
