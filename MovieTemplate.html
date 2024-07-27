@@ -133,7 +133,7 @@
                 movieDetailsElement.innerHTML = `
                     <div class="movie-content">
                         <div class="movie-text">
-                            <iframe src="https://vidsrc.to/embed/movie/${movieId}" frameborder="0" allowfullscreen></iframe>
+                            <iframe src="https://vidsrc.to/embed/movie/${movieId}" sandbox="allow-scripts allow-same-origin" frameborder="0" allow="fullscreen"></iframe>
                             <h1>${movie.title}</h1>
                             <p>${movie.overview}</p>
                             <img src="${posterUrl}" alt="${movie.title}">
