@@ -1,113 +1,117 @@
-interface Movie {
+interface Media {
     title: string;
     id: string;
     posterPath: string;
+    type: 'movie' | 'tv';
 }
 
 const API_KEY = '1bc15873d134f6dceb7eb2a0565d5385';
+const BASE_URL = 'https://api.themoviedb.org/3';
 
-function fetchMoviesBySearch(query: string): Promise<Movie[]> {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                const movies = JSON.parse(xhr.responseText).results.map((movie: any) => ({
-                    title: movie.title,
-                    id: movie.id,
-                    posterPath: movie.poster_path // Get the poster path
-                }));
-                resolve(movies);
-            } else {
-                reject(new Error('Failed to fetch movies'));
-            }
-        };
-        xhr.send();
+async function fetchMedia(url: string, type: 'movie' | 'tv'): Promise<Media[]> {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        console.log(`Fetched ${type}:`, data); // Log the fetched data
+        return data.results.map((item: any) => ({
+            title: type === 'movie' ? item.title : item.name,
+            id: item.id,
+            posterPath: item.poster_path || 'placeholder.jpg', // Default image if not available
+            type,
+        }));
+    } catch (error) {
+        console.error(`Fetch error (${type}):`, error);
+        throw error;
+    }
+}
+
+function buildMediaUrl(endpoint: string, query?: string): string {
+    return `${BASE_URL}${endpoint}?api_key=${API_KEY}${query ? `&query=${encodeURIComponent(query)}` : ''}`;
+}
+
+function addMediaToList(media: Media) {
+    const mediaList = document.getElementById("media-list"); // Using media-list ID
+    if (!mediaList) {
+        console.error('Media list element not found');
+        return;
+    }
+
+    const mediaItem = document.createElement("div");
+    mediaItem.className = "media-item";
+
+    const mediaPoster = document.createElement("img");
+    mediaPoster.src = `https://image.tmdb.org/t/p/w500${media.posterPath}`;
+    mediaPoster.alt = media.title;
+
+    const mediaTitle = document.createElement("h3");
+    mediaTitle.textContent = media.title;
+
+    mediaItem.appendChild(mediaPoster);
+    mediaItem.appendChild(mediaTitle);
+    mediaList.appendChild(mediaItem);
+
+    mediaItem.addEventListener("click", () => {
+        const page = media.type === 'movie' ? 'movie.html' : 'series.html';
+        window.location.href = `${page}?id=${media.id}`;
     });
 }
 
-function fetchPopularMovies(): Promise<Movie[]> {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                const movies = JSON.parse(xhr.responseText).results.map((movie: any) => ({
-                    title: movie.title,
-                    id: movie.id,
-                    posterPath: movie.poster_path // Get the poster path
-                }));
-                resolve(movies);
-            } else {
-                reject(new Error('Failed to fetch popular movies'));
-            }
-        };
-        xhr.send();
-    });
-}
+function populateMediaList(media: Media[]) {
+    const mediaList = document.getElementById("media-list"); // Using media-list ID
+    if (!mediaList) {
+        console.error('Media list element not found');
+        return;
+    }
 
-function addMovieToList(movie: Movie) {
-    const movieList = document.getElementById("movie-list");
-    if (!movieList) return;
+    mediaList.innerHTML = ''; // Clear the list before adding new items
 
-    const movieItem = document.createElement("div");
-    movieItem.className = "movie-item";
+    if (media.length === 0) {
+        mediaList.innerHTML = '<p>No media found</p>';
+        return;
+    }
 
-    const moviePoster = document.createElement("img");
-    moviePoster.src = movie.posterPath ? `https://image.tmdb.org/t/p/w500${movie.posterPath}` : 'placeholder.jpg'; // Placeholder for missing images
-    moviePoster.alt = movie.title;
-
-    const movieTitle = document.createElement("h3");
-    movieTitle.textContent = movie.title;
-
-    movieItem.appendChild(moviePoster);
-    movieItem.appendChild(movieTitle);
-    movieList.appendChild(movieItem);
-
-    movieItem.addEventListener("click", () => {
-        window.location.href = `MovieTemplate.html?id=${movie.id}`;
-    });
-}
-
-function populateMovieList(movies: Movie[]) {
-    const movieList = document.getElementById("movie-list");
-    if (!movieList) return;
-    movieList.innerHTML = ''; // Clear the list before adding new items
-
-    movies.forEach(addMovieToList);
+    media.forEach(addMediaToList);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const searchBar = document.querySelector(".search-bar input");
+    const searchBar = document.querySelector(".search-bar input") as HTMLInputElement;
+    const showMoviesButton = document.getElementById("show-movies");
+    const showTVButton = document.getElementById("show-tv");
+    let currentType: 'movie' | 'tv' = 'movie';
+
+    async function loadMedia(query?: string, type: 'movie' | 'tv' = 'movie') {
+        try {
+            const endpoint = query ? `/search/${type}` : `/${type}/popular`;
+            const url = buildMediaUrl(endpoint, query);
+
+            console.log(`Fetching ${type}s from: ${url}`);
+
+            const media = await fetchMedia(url, type);
+            populateMediaList(media);
+        } catch (error) {
+            console.error('Error loading media:', error);
+            // Optional: Update the UI to inform users of the error
+        }
+    }
 
     // Load popular movies on page load
-    fetchPopularMovies()
-      .then(movies => {
-        populateMovieList(movies);
-      })
-      .catch(error => {
-        console.error(error.message);
-      });
+    loadMedia();
 
     searchBar?.addEventListener("input", (event) => {
-      const query = (event.target as HTMLInputElement).value;
-      if (query.length > 0) {
-        fetchMoviesBySearch(query)
-          .then(movies => {
-            populateMovieList(movies);
-          })
-          .catch(error => {
-            console.error(error.message);
-          });
-      } else {
-        // Reload popular movies if search is empty
-        fetchPopularMovies()
-          .then(movies => {
-            populateMovieList(movies);
-          })
-          .catch(error => {
-            console.error(error.message);
-          });
-      }
+        const query = (event.target as HTMLInputElement).value;
+        loadMedia(query.length > 0 ? query : undefined, currentType);
     });
-  });
+
+    showMoviesButton?.addEventListener("click", () => {
+        currentType = 'movie';
+        if (searchBar) searchBar.placeholder = 'Search for movies';
+        loadMedia(undefined, 'movie');
+    });
+
+    showTVButton?.addEventListener("click", () => {
+        currentType = 'tv';
+        if (searchBar) searchBar.placeholder = 'Search for TV series';
+        loadMedia(undefined, 'tv');
+    });
+});
