@@ -17,11 +17,10 @@ function fetchMedia(url, type) {
             if (!response.ok)
                 throw new Error('Network response was not ok');
             const data = yield response.json();
-            console.log(`Fetched ${type}:`, data); // Log the fetched data
             return data.results.map((item) => ({
                 title: type === 'movie' ? item.title : item.name,
                 id: item.id,
-                posterPath: item.poster_path || 'placeholder.jpg', // Default image if not available
+                posterPath: item.poster_path,
                 type,
             }));
         }
@@ -34,10 +33,10 @@ function fetchMedia(url, type) {
 function buildMediaUrl(endpoint, query) {
     return `${BASE_URL}${endpoint}?api_key=${API_KEY}${query ? `&query=${encodeURIComponent(query)}` : ''}`;
 }
-function addMediaToList(media) {
-    const mediaList = document.getElementById("media-list"); // Using media-list ID
+function addMediaToList(media, containerId) {
+    const mediaList = document.getElementById(containerId);
     if (!mediaList) {
-        console.error('Media list element not found');
+        console.error(`Media list element with ID '${containerId}' not found`);
         return;
     }
     const mediaItem = document.createElement("div");
@@ -55,10 +54,10 @@ function addMediaToList(media) {
         window.location.href = `${page}?id=${media.id}`;
     });
 }
-function populateMediaList(media) {
-    const mediaList = document.getElementById("media-list"); // Using media-list ID
+function populateMediaList(media, containerId) {
+    const mediaList = document.getElementById(containerId);
     if (!mediaList) {
-        console.error('Media list element not found');
+        console.error(`Media list element with ID '${containerId}' not found`);
         return;
     }
     mediaList.innerHTML = ''; // Clear the list before adding new items
@@ -66,44 +65,116 @@ function populateMediaList(media) {
         mediaList.innerHTML = '<p>No media found</p>';
         return;
     }
-    media.forEach(addMediaToList);
+    media.forEach(item => addMediaToList(item, containerId));
 }
 document.addEventListener("DOMContentLoaded", () => {
-    const searchBar = document.querySelector(".search-bar input");
-    const showMoviesButton = document.getElementById("show-movies");
-    const showTVButton = document.getElementById("show-tv");
-    let currentType = 'movie';
-    function loadMedia(query_1) {
-        return __awaiter(this, arguments, void 0, function* (query, type = 'movie') {
+    var _a, _b, _c;
+    const searchBar = document.querySelector("#search-input");
+    const searchContainer = document.getElementById("search");
+    const searchResultsContainer = document.getElementById("search-results-container");
+    let currentType = 'movie'; // Default to movies
+    function loadMediaSections() {
+        return __awaiter(this, void 0, void 0, function* () {
+            loadSectionMedia('/trending/movie/week', 'movie', 'treding-movies-list');
+            loadSectionMedia('/movie/top_rated', 'movie', 'top-rated-movies-list');
+            loadSectionMedia('/trending/tv/week', 'tv', 'treding-tv-list');
+            loadSectionMedia('/tv/top_rated', 'tv', 'top-rated-tv-list');
+        });
+    }
+    function loadSectionMedia(endpoint, type, containerId, query) {
+        return __awaiter(this, void 0, void 0, function* () {
             try {
-                const endpoint = query ? `/search/${type}` : `/${type}/popular`;
                 const url = buildMediaUrl(endpoint, query);
-                console.log(`Fetching ${type}s from: ${url}`);
                 const media = yield fetchMedia(url, type);
-                populateMediaList(media);
+                populateMediaList(media, containerId);
             }
             catch (error) {
-                console.error('Error loading media:', error);
-                // Optional: Update the UI to inform users of the error
+                console.error(`Error loading media for ${containerId}:`, error);
             }
         });
     }
-    // Load popular movies on page load
-    loadMedia();
+    function populateSearchResults(media) {
+        if (!searchResultsContainer) {
+            console.error('Search results container not found');
+            return;
+        }
+        searchResultsContainer.innerHTML = '';
+        if (media.length === 0) {
+            searchResultsContainer.innerHTML = '<p>No media found</p>';
+            return;
+        }
+        media.forEach(item => {
+            const resultItem = document.createElement("div");
+            resultItem.className = "search-result-item";
+            const resultPoster = document.createElement("img");
+            resultPoster.src = `https://image.tmdb.org/t/p/w500${item.posterPath}`;
+            resultPoster.alt = item.title;
+            const resultInfo = document.createElement("div");
+            const resultTitle = document.createElement("h3");
+            resultTitle.textContent = item.title;
+            resultInfo.appendChild(resultTitle);
+            resultItem.appendChild(resultPoster);
+            resultItem.appendChild(resultInfo);
+            searchResultsContainer.appendChild(resultItem);
+            resultItem.addEventListener("click", () => {
+                const page = item.type === 'movie' ? 'movie.html' : 'series.html';
+                window.location.href = `${page}?id=${item.id}`;
+            });
+        });
+        searchResultsContainer.classList.remove("hidden");
+    }
+    function handleSearch(query) {
+        if (query.trim().length === 0) {
+            searchResultsContainer === null || searchResultsContainer === void 0 ? void 0 : searchResultsContainer.classList.add("hidden");
+            return;
+        }
+        Promise.all([
+            fetchMedia(buildMediaUrl(`/search/movie`, query), 'movie'),
+            fetchMedia(buildMediaUrl(`/search/tv`, query), 'tv')
+        ])
+            .then(([movies, tvSeries]) => {
+            const combinedResults = [...movies, ...tvSeries];
+            populateSearchResults(combinedResults);
+        })
+            .catch(error => console.error('Search error:', error));
+    }
     searchBar === null || searchBar === void 0 ? void 0 : searchBar.addEventListener("input", (event) => {
         const query = event.target.value;
-        loadMedia(query.length > 0 ? query : undefined, currentType);
+        handleSearch(query);
     });
-    showMoviesButton === null || showMoviesButton === void 0 ? void 0 : showMoviesButton.addEventListener("click", () => {
-        currentType = 'movie';
-        if (searchBar)
-            searchBar.placeholder = 'Search for movies';
-        loadMedia(undefined, 'movie');
+    // Handle "Enter" key press in the search bar
+    searchBar === null || searchBar === void 0 ? void 0 : searchBar.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Prevent any default action like form submission
+            const query = searchBar.value;
+            console.log("Enter key pressed. Query:", query); // Debugging output
+            handleSearch(query);
+        }
     });
-    showTVButton === null || showTVButton === void 0 ? void 0 : showTVButton.addEventListener("click", () => {
-        currentType = 'tv';
-        if (searchBar)
-            searchBar.placeholder = 'Search for TV series';
-        loadMedia(undefined, 'tv');
+    // Handle expanding search bar
+    if (searchContainer) {
+        searchContainer.addEventListener("click", () => {
+            searchContainer.classList.add("expanded");
+            searchBar === null || searchBar === void 0 ? void 0 : searchBar.focus();
+        });
+        document.addEventListener("click", (event) => {
+            if (!searchContainer.contains(event.target)) {
+                searchContainer.classList.remove("expanded");
+                searchResultsContainer === null || searchResultsContainer === void 0 ? void 0 : searchResultsContainer.classList.add("hidden"); // Hide results when search bar minimizes
+            }
+        });
+    }
+    // Load the initial media sections on page load
+    loadMediaSections();
+    // Event listener for "Home" button to reload the default sections
+    (_a = document.getElementById("home")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
+        loadMediaSections();
+    });
+    // Event listeners for social media buttons
+    (_b = document.getElementById("instagram")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => {
+        window.location.href = "https://www.instagram.com/stefanos_klb/";
+    });
+    (_c = document.getElementById("github")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", () => {
+        window.location.href = "https://github.com/StefanosKlb/";
     });
 });

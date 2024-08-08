@@ -5,37 +5,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="MainMenu.css">
-    <link rel="icon" type="image/x-icon" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/x-icon" href="icon/apple-touch-icon.png">
     <title>Main Page</title>
+    <script src="main.js" defer></script>
 </head>
 
 <body>
+    <nav class="navbar">
+        <div class="navbar-menu">
+            <div class="menu-item" id="home">
+                <img src="icon/house2.png" alt="Home">
+            </div>
+            <div class="menu-item" id="search">
+                <img src="icon/search3.png" alt="Search">
+                <input type="text" placeholder="Search for movies or TV series..." id="search-input">
+                <div id="search-results-container" class="hidden"></div>
+            </div>
+            <div class="menu-item" id="instagram">
+                <img src="icon/Instagram_logo_2016.svg.webp" alt="instagram">
+            </div>
+            <div class="menu-item" id="github">
+                <img src="icon/Github-desktop-logo-symbol.svg.png" alt="github">
+            </div>
+        </div>
+    </nav>
+
+    
     <div class="container">
         <h1>Welcome to PopTime</h1>
-        <div class="search-bar">
-            <input type="text" placeholder="Search for movies...">
-        </div>
-        <div class="button-bar">
-            <button id="show-movies">Popular Movies</button>
-            <button id="show-tv">Popular TV Series</button>
-        </div>
-        <div class="media-list" id="media-list">
-            <!-- Movie items will be dynamically added here -->
-        </div>
-        <div class="about-us">
-            <dl>
-                <dt id="about-us"><h2>About us</h2></dt>
-                <dt id="description">Welcome to PopTime, your go-to destination for discovering and exploring movies. Our mission is to provide a seamless
-                and enjoyable experience for movie enthusiasts.
-                Browse our extensive collection of popular and trending films, complete with detailed information and stunning visuals.
-                With intuitive search functionality and curated lists, finding your favorite movies or discovering new ones has never
-                been easier.</dt>
-                <dt id="instagram">instagram</dt>
-                <dt id="github">Tea</dt>
-            </dl>
-        </div>
+
+        <section id="treding-movies">
+            <h2>Treding Movies</h2>
+            <div id="treding-movies-list" class="media-list"></div>
+        </section>
+
+        <section id="treding-tv">
+            <h2>Treding TV Series</h2>
+            <div id="treding-tv-list" class="media-list"></div>
+        </section>
+    
+        <section id="top-rated-movies">
+            <h2>Top Rated Movies</h2>
+            <div id="top-rated-movies-list" class="media-list"></div>
+        </section>
+    
+        <section id="top-rated-tv">
+            <h2>Top Rated TV Series</h2>
+            <div id="top-rated-tv-list" class="media-list"></div>
+        </section>
     </div>
-    <script src="main.js"></script>
+
 </body>
 
 </html>
