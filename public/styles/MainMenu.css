@@ -199,6 +199,8 @@ h2 {
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s;
+    aspect-ratio: 2/3;
+    overflow: hidden;
 }
 
 .media-item:hover {
@@ -206,8 +208,11 @@ h2 {
 }
 
 .media-item img {
-    width: 160px;
-    height: 250px;
+    width: 100%;
+        /* Adjust width to container */
+    aspect-ratio: 2/3;
+        /* Set aspect ratio to match 500x750 */
+    object-fit: cover;
     border-radius: 5px;
     margin-bottom: 10px;
 }
@@ -226,6 +231,10 @@ h2 {
     h1 {
         font-size: 2.2em;
     }
+        .media-item img {
+            width: 100%;
+            aspect-ratio: 2/3;
+        }
 }
 
 @media (max-width: 992px) {
@@ -236,6 +245,10 @@ h2 {
     h1 {
         font-size: 2em;
     }
+        .media-item img {
+            width: 100%;
+            aspect-ratio: 2/3;
+        }
 }
 
 @media (max-width: 768px) {
@@ -245,6 +258,11 @@ h2 {
 
     h1 {
         font-size: 1.8em;
+    }
+
+    .media-item img {
+        width: 100%;
+        aspect-ratio: 2/3;
     }
 }
 
@@ -257,6 +275,11 @@ h2 {
         font-size: 0.9em;
     }
 
+    .media-item img {
+        width: 100%;
+        aspect-ratio: 2/3;
+    }
+    
     .navbar img {
         float: none;
         display: block;
