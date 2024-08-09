@@ -10,16 +10,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
     try {
+        // Fetch series details
         const response = await fetch(`https://api.themoviedb.org/3/tv/${seriesId}?api_key=${API_KEY}`);
         if (!response.ok)
             throw new Error('Failed to fetch series details');
         const series = await response.json();
+        // Fetch series images
         const imagesResponse = await fetch(`https://api.themoviedb.org/3/tv/${seriesId}/images?api_key=${API_KEY}`);
         if (!imagesResponse.ok)
             throw new Error('Failed to fetch series images');
         const images = await imagesResponse.json();
-        const posterUrl = cloudinaryUrl(images.posters[0].file_path); // Updated line
+        // Transform the poster URL using Cloudinary
+        const posterUrl = cloudinaryUrl(images.posters[0].file_path); // Ensure cloudinaryUrl function is correct
         const genres = series.genres.map((genre) => genre.name).join(", ");
+        // Update the series details element
         seriesDetailsElement.innerHTML = `
             <div class="series-content">
                 <div class="series-text">
@@ -36,6 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </div>
             </div>
         `;
+        // Populate season and episode selects
         const seasonSelect = document.getElementById("season-select");
         const episodeSelect = document.getElementById("episode-select");
         const seriesIframe = document.getElementById("series-iframe");

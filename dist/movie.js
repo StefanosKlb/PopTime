@@ -1,12 +1,13 @@
-var _a, _b;
 import { handleSearchInput, handleSearchKeyDown, expandSearchBar, handleDocumentClick, cloudinaryUrl } from './main.js';
 document.addEventListener("DOMContentLoaded", async () => {
+    var _a, _b;
     const API_KEY = '1bc15873d134f6dceb7eb2a0565d5385';
     const urlParams = new URLSearchParams(window.location.search);
     const movieId = urlParams.get("id");
     const searchBar = document.querySelector("#search-input");
     const searchContainer = document.getElementById("search");
     const movieDetailsElement = document.getElementById("movie-details");
+    const homeButton = document.getElementById("home");
     if (!movieDetailsElement) {
         console.error("Movie details element not found");
         return;
@@ -24,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!imagesResponse.ok)
             throw new Error('Failed to fetch movie images');
         const images = await imagesResponse.json();
-        const posterUrl = cloudinaryUrl(images.posters[0].file_path); // Updated line
+        const posterUrl = cloudinaryUrl(images.posters[0].file_path);
         const genres = movie.genres.map((genre) => genre.name).join(", ");
         movieDetailsElement.innerHTML = `
             <div class="movie-content">
@@ -52,9 +53,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         searchContainer.addEventListener("click", expandSearchBar);
         document.addEventListener("click", handleDocumentClick);
     }
-});
-document.addEventListener("DOMContentLoaded", () => {
-    const homeButton = document.getElementById("home");
     if (homeButton) {
         homeButton.addEventListener("click", () => {
             window.location.href = window.location.origin + '/index.html';
@@ -63,11 +61,11 @@ document.addEventListener("DOMContentLoaded", () => {
     else {
         console.error("Home button element not found");
     }
-});
-(_a = document.getElementById("instagram")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
-    window.location.href = "https://www.instagram.com/stefanos_klb/";
-});
-(_b = document.getElementById("github")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => {
-    window.location.href = "https://github.com/StefanosKlb";
+    (_a = document.getElementById("instagram")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
+        window.location.href = "https://www.instagram.com/stefanos_klb/";
+    });
+    (_b = document.getElementById("github")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => {
+        window.location.href = "https://github.com/StefanosKlb";
+    });
 });
 //# sourceMappingURL=movie.js.map

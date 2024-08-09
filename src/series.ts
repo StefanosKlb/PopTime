@@ -1,6 +1,5 @@
 import { handleSearchInput, handleSearchKeyDown, expandSearchBar, handleDocumentClick, cloudinaryUrl } from './main.js';
 
-
 document.addEventListener("DOMContentLoaded", async () => {
     const API_KEY = '1bc15873d134f6dceb7eb2a0565d5385';
     const urlParams = new URLSearchParams(window.location.search);
@@ -13,17 +12,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
+        // Fetch series details
         const response = await fetch(`https://api.themoviedb.org/3/tv/${seriesId}?api_key=${API_KEY}`);
         if (!response.ok) throw new Error('Failed to fetch series details');
         const series = await response.json();
 
+        // Fetch series images
         const imagesResponse = await fetch(`https://api.themoviedb.org/3/tv/${seriesId}/images?api_key=${API_KEY}`);
         if (!imagesResponse.ok) throw new Error('Failed to fetch series images');
         const images = await imagesResponse.json();
 
-        const posterUrl = cloudinaryUrl(images.posters[0].file_path);  // Updated line
+        // Transform the poster URL using Cloudinary
+        const posterUrl = cloudinaryUrl(images.posters[0].file_path);  // Ensure cloudinaryUrl function is correct
         const genres = series.genres.map((genre: { name: string }) => genre.name).join(", ");
 
+        // Update the series details element
         seriesDetailsElement.innerHTML = `
             <div class="series-content">
                 <div class="series-text">
@@ -41,6 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             </div>
         `;
 
+        // Populate season and episode selects
         const seasonSelect = document.getElementById("season-select") as HTMLSelectElement;
         const episodeSelect = document.getElementById("episode-select") as HTMLSelectElement;
         const seriesIframe = document.getElementById("series-iframe") as HTMLIFrameElement;

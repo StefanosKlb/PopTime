@@ -1,9 +1,3 @@
-import { v2 as cloudinary } from 'cloudinary';
-cloudinary.config({
-    cloud_name: 'dx5z8qoag',
-    api_key: '568524568594139',
-    api_secret: 'nTLihzN1Ihna1dF-u8GHFTnZ_SI',
-});
 const API_KEY = '1bc15873d134f6dceb7eb2a0565d5385';
 const BASE_URL = 'https://api.themoviedb.org/3';
 export async function fetchMedia(url, type) {

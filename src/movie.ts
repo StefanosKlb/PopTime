@@ -1,4 +1,4 @@
-import { handleSearchInput, handleSearchKeyDown, expandSearchBar, handleDocumentClick, cloudinaryUrl} from './main.js';
+import { handleSearchInput, handleSearchKeyDown, expandSearchBar, handleDocumentClick, cloudinaryUrl } from './main.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     const API_KEY = '1bc15873d134f6dceb7eb2a0565d5385';
@@ -7,8 +7,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const searchBar = document.querySelector("#search-input") as HTMLInputElement;
     const searchContainer = document.getElementById("search");
-
     const movieDetailsElement = document.getElementById("movie-details");
+    const homeButton = document.getElementById("home");
+
     if (!movieDetailsElement) {
         console.error("Movie details element not found");
         return;
@@ -28,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!imagesResponse.ok) throw new Error('Failed to fetch movie images');
         const images = await imagesResponse.json();
 
-        const posterUrl = cloudinaryUrl(images.posters[0].file_path);  // Updated line
+        const posterUrl = cloudinaryUrl(images.posters[0].file_path);
 
         const genres = movie.genres.map((genre: { name: string }) => genre.name).join(", ");
 
@@ -59,11 +60,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         searchContainer.addEventListener("click", expandSearchBar);
         document.addEventListener("click", handleDocumentClick);
     }
-});
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    const homeButton = document.getElementById("home");
 
     if (homeButton) {
         homeButton.addEventListener("click", () => {
@@ -72,13 +68,12 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
         console.error("Home button element not found");
     }
-});
 
+    document.getElementById("instagram")?.addEventListener("click", () => {
+        window.location.href = "https://www.instagram.com/stefanos_klb/";
+    });
 
-document.getElementById("instagram")?.addEventListener("click", () => {
-    window.location.href = "https://www.instagram.com/stefanos_klb/";
-});
-
-document.getElementById("github")?.addEventListener("click", () => {
-    window.location.href = "https://github.com/StefanosKlb";
+    document.getElementById("github")?.addEventListener("click", () => {
+        window.location.href = "https://github.com/StefanosKlb";
+    });
 });
