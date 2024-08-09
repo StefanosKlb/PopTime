@@ -1,11 +1,11 @@
-const CACHE_NAME = 'PopTime-v1';
+const CACHE_NAME = 'v1_cache';
 const URLs_TO_CACHE = [
   '/',
-  'index.html',
+  '/index.html',
   '/styles/main.css',
   '/main.js',
-  '/assets/apple-touch-icon.png',
-  '/assets/apple-touch-icon.png'
+  '/public/assets/apple-touch-icon.png',
+  '/public/assets/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', (event) => {
