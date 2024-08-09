@@ -4,8 +4,8 @@ const URLs_TO_CACHE = [
   '/index.html',
   '/styles/main.css',
   '/main.js',
-  '/public/assets/apple-touch-icon.png',
-  '/public/assets/apple-touch-icon.png'
+  '/public/assets/placeholder.jpg',
+  '/public/assets/placeholder.jpg'
 ];
 
 self.addEventListener('install', (event) => {
