@@ -87,7 +87,7 @@ export function createSearchResultItem(item) {
     resultItem.addEventListener("click", () => redirectToMediaPage(item));
 }
 export function cloudinaryUrl(posterPath) {
-    return `https://res.cloudinary.com/your_cloud_name/image/fetch/f_auto,q_auto,w_500/https://image.tmdb.org/t/p/original${posterPath}`;
+    return `https://res.cloudinary.com/dx5z8qoag/image/fetch/f_auto,q_auto,w_500/https://image.tmdb.org/t/p/original${posterPath}`;
 }
 export function handleSearch(query) {
     const searchResultsContainer = document.getElementById("search-results-container");
