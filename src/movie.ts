@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             searchResultsContainer.appendChild(resultItem);
 
             resultItem.addEventListener("click", () => {
-                const page = item.type === 'movie' ? 'movie.html' : 'series.html';
+                const page = item.type === 'movie' ? '/public/movie.html' : '/public/series.html';
                 window.location.href = `${page}?id=${item.id}`;
             });
         });
@@ -152,7 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
         console.error("Home button element not found");
     }
-
 });
 
 document.getElementById("instagram")?.addEventListener("click", () => {

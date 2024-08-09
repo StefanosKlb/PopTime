@@ -38,7 +38,7 @@ function addMediaToList(media, containerId) {
     mediaItem.appendChild(mediaTitle);
     mediaList.appendChild(mediaItem);
     mediaItem.addEventListener("click", () => {
-        const page = media.type === 'movie' ? './public/movie.html' : './public/series.html';
+        const page = media.type === 'movie' ? '/public/movie.html' : '/public/series.html';
         window.location.href = `${page}?id=${media.id}`;
     });
 }
@@ -148,10 +148,9 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = url;
     }
     function redirectToMediaPage(item) {
-        const page = item.type === 'movie' ? './public/movie.html' : './public/series.html';
+        const page = item.type === 'movie' ? '/public/movie.html' : '/public/series.html';
         window.location.href = `${page}?id=${item.id}`;
     }
-    // Initialize
     loadMediaSections();
     initializeEventListeners();
 });

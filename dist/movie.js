@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             resultItem.appendChild(resultInfo);
             searchResultsContainer.appendChild(resultItem);
             resultItem.addEventListener("click", () => {
-                const page = item.type === 'movie' ? 'movie.html' : 'series.html';
+                const page = item.type === 'movie' ? '/public/movie.html' : '/public/series.html';
                 window.location.href = `${page}?id=${item.id}`;
             });
         });
