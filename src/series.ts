@@ -1,4 +1,5 @@
-import { handleSearchInput, handleSearchKeyDown, expandSearchBar, handleDocumentClick } from './main.js';
+import { handleSearchInput, handleSearchKeyDown, expandSearchBar, handleDocumentClick, cloudinaryUrl } from './main.js';
+
 
 document.addEventListener("DOMContentLoaded", async () => {
     const API_KEY = '1bc15873d134f6dceb7eb2a0565d5385';
@@ -20,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!imagesResponse.ok) throw new Error('Failed to fetch series images');
         const images = await imagesResponse.json();
 
-        const posterUrl = `https://image.tmdb.org/t/p/w500${images.posters[0].file_path}`;
+        const posterUrl = cloudinaryUrl(images.posters[0].file_path);  // Updated line
         const genres = series.genres.map((genre: { name: string }) => genre.name).join(", ");
 
         seriesDetailsElement.innerHTML = `

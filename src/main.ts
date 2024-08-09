@@ -1,3 +1,11 @@
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+  cloud_name: 'dx5z8qoag',
+  api_key: '568524568594139',
+  api_secret: 'nTLihzN1Ihna1dF-u8GHFTnZ_SI',
+});
+
 export interface Media {
     title: string;
     id: string;
@@ -87,9 +95,12 @@ export function createSearchResultItem(item: Media) {
     const searchResultsContainer = document.getElementById("search-results-container");
     const resultItem = document.createElement("div");
     resultItem.className = "search-result-item";
+
+    // Transform and deliver the image via Cloudinary
     const resultPoster = document.createElement("img");
-    resultPoster.src = `https://image.tmdb.org/t/p/w500${item.posterPath}`;
+    resultPoster.src = cloudinaryUrl(item.posterPath);
     resultPoster.alt = item.title;
+
     const resultInfo = document.createElement("div");
     const resultTitle = document.createElement("h3");
     resultTitle.textContent = item.title;
@@ -100,6 +111,10 @@ export function createSearchResultItem(item: Media) {
     searchResultsContainer?.appendChild(resultItem);
 
     resultItem.addEventListener("click", () => redirectToMediaPage(item));
+}
+
+export function cloudinaryUrl(posterPath: string): string {
+    return `https://res.cloudinary.com/your_cloud_name/image/fetch/f_auto,q_auto,w_500/https://image.tmdb.org/t/p/original${posterPath}`;
 }
 
 export function handleSearch(query: string) {
