@@ -1,12 +1,11 @@
 var _a, _b;
-import { fetchMedia, buildMediaUrl } from './main.js';
+import { handleSearchInput, handleSearchKeyDown, expandSearchBar, handleDocumentClick } from './main.js';
 document.addEventListener("DOMContentLoaded", async () => {
     const API_KEY = '1bc15873d134f6dceb7eb2a0565d5385';
     const urlParams = new URLSearchParams(window.location.search);
     const movieId = urlParams.get("id");
     const searchBar = document.querySelector("#search-input");
     const searchContainer = document.getElementById("search");
-    const searchResultsContainer = document.getElementById("search-results-container");
     const movieDetailsElement = document.getElementById("movie-details");
     if (!movieDetailsElement) {
         console.error("Movie details element not found");
@@ -46,83 +45,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
         movieDetailsElement.innerHTML = `<p>${errorMessage}</p>`;
     }
-    function populateSearchResults(media) {
-        if (!searchResultsContainer) {
-            console.error('Search results container not found');
-            return;
-        }
-        searchResultsContainer.innerHTML = '';
-        if (media.length === 0) {
-            searchResultsContainer.innerHTML = '<p>No media found</p>';
-            return;
-        }
-        media.forEach(item => {
-            const resultItem = document.createElement("div");
-            resultItem.className = "search-result-item";
-            const resultPoster = document.createElement("img");
-            resultPoster.src = `https://image.tmdb.org/t/p/w500${item.posterPath}`;
-            resultPoster.alt = item.title;
-            const resultInfo = document.createElement("div");
-            const resultTitle = document.createElement("h3");
-            resultTitle.textContent = item.title;
-            resultInfo.appendChild(resultTitle);
-            resultItem.appendChild(resultPoster);
-            resultItem.appendChild(resultInfo);
-            searchResultsContainer.appendChild(resultItem);
-            resultItem.addEventListener("click", () => {
-                const page = item.type === 'movie' ? '/public/movie.html' : '/public/series.html';
-                window.location.href = `${page}?id=${item.id}`;
-            });
-        });
-        searchResultsContainer.classList.remove("hidden");
-    }
-    function handleSearch(query) {
-        if (query.trim().length === 0) {
-            searchResultsContainer === null || searchResultsContainer === void 0 ? void 0 : searchResultsContainer.classList.add("hidden");
-            return;
-        }
-        Promise.all([
-            fetchMedia(buildMediaUrl(`/search/movie`, query), 'movie'),
-            fetchMedia(buildMediaUrl(`/search/tv`, query), 'tv')
-        ])
-            .then(([movies, tvSeries]) => {
-            const combinedResults = [...movies, ...tvSeries];
-            populateSearchResults(combinedResults);
-        })
-            .catch(error => console.error('Search error:', error));
-    }
-    searchBar === null || searchBar === void 0 ? void 0 : searchBar.addEventListener("input", (event) => {
-        const query = event.target.value;
-        handleSearch(query);
-    });
-    // Handle "Enter" key press in the search bar
-    searchBar === null || searchBar === void 0 ? void 0 : searchBar.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-            event.preventDefault(); // Prevent any default action like form submission
-            const query = searchBar.value;
-            console.log("Enter key pressed. Query:", query); // Debugging output
-            handleSearch(query);
-        }
-    });
-    // Handle expanding search bar
+    // Attach event listeners
+    searchBar === null || searchBar === void 0 ? void 0 : searchBar.addEventListener("input", handleSearchInput);
+    searchBar === null || searchBar === void 0 ? void 0 : searchBar.addEventListener("keydown", handleSearchKeyDown);
     if (searchContainer) {
-        searchContainer.addEventListener("click", () => {
-            searchContainer.classList.add("expanded");
-            searchBar === null || searchBar === void 0 ? void 0 : searchBar.focus();
-        });
-        document.addEventListener("click", (event) => {
-            if (!searchContainer.contains(event.target)) {
-                searchContainer.classList.remove("expanded");
-                searchResultsContainer === null || searchResultsContainer === void 0 ? void 0 : searchResultsContainer.classList.add("hidden"); // Hide results when search bar minimizes
-            }
-        });
+        searchContainer.addEventListener("click", expandSearchBar);
+        document.addEventListener("click", handleDocumentClick);
     }
 });
 document.addEventListener("DOMContentLoaded", () => {
     const homeButton = document.getElementById("home");
     if (homeButton) {
         homeButton.addEventListener("click", () => {
-            window.location.href = "index.html";
+            window.location.href = window.location.origin + '/index.html';
         });
     }
     else {

@@ -1,6 +1,6 @@
-"use strict";
-var _a, _b;
+import { handleSearchInput, handleSearchKeyDown, expandSearchBar, handleDocumentClick } from './main.js';
 document.addEventListener("DOMContentLoaded", async () => {
+    var _a, _b;
     const API_KEY = '1bc15873d134f6dceb7eb2a0565d5385';
     const urlParams = new URLSearchParams(window.location.search);
     const seriesId = urlParams.get("id");
@@ -77,24 +77,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         seasonSelect.dispatchEvent(new Event('change'));
     }
     catch (error) {
-        if (error instanceof Error) {
-            seriesDetailsElement.innerHTML = `<p>${error.message}</p>`;
-        }
-        else {
-            seriesDetailsElement.innerHTML = `<p>An unknown error occurred</p>`;
-        }
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        seriesDetailsElement.innerHTML = `<p>${errorMessage}</p>`;
     }
-});
-document.addEventListener("DOMContentLoaded", () => {
+    // Search bar event listeners
+    const searchBar = document.querySelector("#search-input");
+    const searchContainer = document.getElementById("search");
+    searchBar === null || searchBar === void 0 ? void 0 : searchBar.addEventListener("input", handleSearchInput);
+    searchBar === null || searchBar === void 0 ? void 0 : searchBar.addEventListener("keydown", handleSearchKeyDown);
+    if (searchContainer) {
+        searchContainer.addEventListener("click", expandSearchBar);
+        document.addEventListener("click", handleDocumentClick);
+    }
+    // Home button event listener
     const homeButton = document.getElementById("home");
     homeButton === null || homeButton === void 0 ? void 0 : homeButton.addEventListener("click", () => {
-        window.location.href = "index.html";
+        window.location.href = window.location.origin + '/index.html';
     });
-});
-(_a = document.getElementById("instagram")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
-    window.location.href = "https://www.instagram.com/stefanos_klb/";
-});
-(_b = document.getElementById("github")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => {
-    window.location.href = "https://github.com/StefanosKlb";
+    // Social media links
+    (_a = document.getElementById("instagram")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
+        window.location.href = "https://www.instagram.com/stefanos_klb/";
+    });
+    (_b = document.getElementById("github")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => {
+        window.location.href = "https://github.com/StefanosKlb";
+    });
 });
 //# sourceMappingURL=series.js.map

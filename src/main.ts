@@ -29,7 +29,7 @@ export function buildMediaUrl(endpoint: string, query?: string): string {
     return `${BASE_URL}${endpoint}?api_key=${API_KEY}${query ? `&query=${encodeURIComponent(query)}` : ''}`;
 }
 
-function addMediaToList(media: Media, containerId: string) {
+export function addMediaToList(media: Media, containerId: string) {
     const mediaList = document.getElementById(containerId);
     if (!mediaList) {
         console.error(`Media list element with ID '${containerId}' not found`);
@@ -56,8 +56,7 @@ function addMediaToList(media: Media, containerId: string) {
     });
 }
 
-
-function populateMediaList(media: Media[], containerId: string) {
+export function populateMediaList(media: Media[], containerId: string) {
     const mediaList = document.getElementById(containerId);
     if (!mediaList) {
         console.error(`Media list element with ID '${containerId}' not found`);
@@ -74,24 +73,90 @@ function populateMediaList(media: Media[], containerId: string) {
     media.forEach(item => addMediaToList(item, containerId));
 }
 
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    const searchBar = document.querySelector("#search-input") as HTMLInputElement;
-    const searchContainer = document.getElementById("search");
+export function populateSearchResults(media: Media[]) {
     const searchResultsContainer = document.getElementById("search-results-container");
+    if (!searchResultsContainer) return;
 
-    function initializeEventListeners() {
-        searchBar?.addEventListener("input", handleSearchInput);
-        searchBar?.addEventListener("keydown", handleSearchKeyDown);
-        searchContainer?.addEventListener("click", expandSearchBar);
-        document.addEventListener("click", handleDocumentClick);
-        document.getElementById("home")?.addEventListener("click", loadMediaSections);
-        document.getElementById("instagram")?.addEventListener("click", () => redirectToSocialMedia("https://www.instagram.com/stefanos_klb/"));
-        document.getElementById("github")?.addEventListener("click", () => redirectToSocialMedia("https://github.com/StefanosKlb/"));
+    searchResultsContainer.innerHTML = media.length === 0 ? '<p>No media found</p>' : '';
+
+    media.forEach(item => createSearchResultItem(item));
+    searchResultsContainer.classList.remove("hidden");
+}
+
+export function createSearchResultItem(item: Media) {
+    const searchResultsContainer = document.getElementById("search-results-container");
+    const resultItem = document.createElement("div");
+    resultItem.className = "search-result-item";
+    const resultPoster = document.createElement("img");
+    resultPoster.src = `https://image.tmdb.org/t/p/w500${item.posterPath}`;
+    resultPoster.alt = item.title;
+    const resultInfo = document.createElement("div");
+    const resultTitle = document.createElement("h3");
+    resultTitle.textContent = item.title;
+
+    resultInfo.appendChild(resultTitle);
+    resultItem.appendChild(resultPoster);
+    resultItem.appendChild(resultInfo);
+    searchResultsContainer?.appendChild(resultItem);
+
+    resultItem.addEventListener("click", () => redirectToMediaPage(item));
+}
+
+export function handleSearch(query: string) {
+    const searchResultsContainer = document.getElementById("search-results-container");
+    if (query.trim().length === 0) {
+        searchResultsContainer?.classList.add("hidden");
+        return;
     }
 
-    async function loadMediaSections() {
+    Promise.all([
+        fetchMedia(buildMediaUrl(`/search/movie`, query), 'movie'),
+        fetchMedia(buildMediaUrl(`/search/tv`, query), 'tv')
+    ])
+        .then(([movies, tvSeries]) => populateSearchResults([...movies, ...tvSeries]))
+        .catch(error => console.error('Search error:', error));
+}
+
+export function handleSearchInput(event: Event) {
+    const searchBar = document.querySelector("#search-input") as HTMLInputElement;
+    const query = (event.target as HTMLInputElement).value;
+    handleSearch(query);
+}
+
+export function handleSearchKeyDown(event: KeyboardEvent) {
+    const searchBar = document.querySelector("#search-input") as HTMLInputElement;
+    if (event.key === "Enter") {
+        event.preventDefault();
+        handleSearch(searchBar.value);
+    }
+}
+
+export function expandSearchBar() {
+    const searchContainer = document.getElementById("search");
+    const searchBar = document.querySelector("#search-input") as HTMLInputElement;
+    searchContainer?.classList.add("expanded");
+    searchBar?.focus();
+}
+
+export function handleDocumentClick(event: Event) {
+    const searchContainer = document.getElementById("search");
+    const searchResultsContainer = document.getElementById("search-results-container");
+    if (!searchContainer?.contains(event.target as Node)) {
+        searchContainer?.classList.remove("expanded");
+        searchResultsContainer?.classList.add("hidden");
+    }
+}
+
+export function redirectToSocialMedia(url: string) {
+    window.location.href = url;
+}
+
+export function redirectToMediaPage(item: Media) {
+    const page = item.type === 'movie' ? '/public/movie.html' : '/public/series.html';
+    window.location.href = `${page}?id=${item.id}`;
+}
+
+export async function loadMediaSections() {
     const mediaEndpoints: { endpoint: string; type: "movie" | "tv"; containerId: string }[] = [
         { endpoint: '/trending/movie/week', type: 'movie', containerId: 'treding-movies-list' },
         { endpoint: '/movie/top_rated', type: 'movie', containerId: 'top-rated-movies-list' },
@@ -104,91 +169,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 }
 
-
-    async function loadSectionMedia(endpoint: string, type: 'movie' | 'tv', containerId: string, query?: string) {
-        try {
-            const url = buildMediaUrl(endpoint, query);
-            const media = await fetchMedia(url, type);
-            populateMediaList(media, containerId);
-        } catch (error) {
-            console.error(`Error loading media for ${containerId}:`, error);
-        }
+export async function loadSectionMedia(endpoint: string, type: 'movie' | 'tv', containerId: string, query?: string) {
+    try {
+        const url = buildMediaUrl(endpoint, query);
+        const media = await fetchMedia(url, type);
+        populateMediaList(media, containerId);
+    } catch (error) {
+        console.error(`Error loading media for ${containerId}:`, error);
     }
+}
 
-    function populateSearchResults(media: Media[]) {
-        if (!searchResultsContainer) return;
+export function initializeEventListeners() {
+    const searchBar = document.querySelector("#search-input") as HTMLInputElement;
+    const searchContainer = document.getElementById("search");
+    searchBar?.addEventListener("input", handleSearchInput);
+    searchBar?.addEventListener("keydown", handleSearchKeyDown);
+    searchContainer?.addEventListener("click", expandSearchBar);
+    document.addEventListener("click", handleDocumentClick);
+    document.getElementById("home")?.addEventListener("click", loadMediaSections);
+    document.getElementById("instagram")?.addEventListener("click", () => redirectToSocialMedia("https://www.instagram.com/stefanos_klb/"));
+    document.getElementById("github")?.addEventListener("click", () => redirectToSocialMedia("https://github.com/StefanosKlb/"));
+}
 
-        searchResultsContainer.innerHTML = media.length === 0 ? '<p>No media found</p>' : '';
-
-        media.forEach(item => createSearchResultItem(item));
-        searchResultsContainer.classList.remove("hidden");
-    }
-
-    function createSearchResultItem(item: Media) {
-        const resultItem = document.createElement("div");
-        resultItem.className = "search-result-item";
-        const resultPoster = document.createElement("img");
-        resultPoster.src = `https://image.tmdb.org/t/p/w500${item.posterPath}`;
-        resultPoster.alt = item.title;
-        const resultInfo = document.createElement("div");
-        const resultTitle = document.createElement("h3");
-        resultTitle.textContent = item.title;
-
-        resultInfo.appendChild(resultTitle);
-        resultItem.appendChild(resultPoster);
-        resultItem.appendChild(resultInfo);
-        searchResultsContainer?.appendChild(resultItem);
-
-        resultItem.addEventListener("click", () => redirectToMediaPage(item));
-    }
-
-    function handleSearch(query: string) {
-        if (query.trim().length === 0) {
-            searchResultsContainer?.classList.add("hidden");
-            return;
-        }
-
-        Promise.all([
-            fetchMedia(buildMediaUrl(`/search/movie`, query), 'movie'),
-            fetchMedia(buildMediaUrl(`/search/tv`, query), 'tv')
-        ])
-            .then(([movies, tvSeries]) => populateSearchResults([...movies, ...tvSeries]))
-            .catch(error => console.error('Search error:', error));
-    }
-
-    function handleSearchInput(event: Event) {
-        const query = (event.target as HTMLInputElement).value;
-        handleSearch(query);
-    }
-
-    function handleSearchKeyDown(event: KeyboardEvent) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            handleSearch(searchBar.value);
-        }
-    }
-
-    function expandSearchBar() {
-        searchContainer?.classList.add("expanded");
-        searchBar?.focus();
-    }
-
-    function handleDocumentClick(event: Event) {
-        if (!searchContainer?.contains(event.target as Node)) {
-            searchContainer?.classList.remove("expanded");
-            searchResultsContainer?.classList.add("hidden");
-        }
-    }
-
-    function redirectToSocialMedia(url: string) {
-        window.location.href = url;
-    }
-
-    function redirectToMediaPage(item: Media) {
-        const page = item.type === 'movie' ? '/public/movie.html' : '/public/series.html';
-        window.location.href = `${page}?id=${item.id}`;
-    }
-
+document.addEventListener("DOMContentLoaded", () => {
     loadMediaSections();
     initializeEventListeners();
 });
