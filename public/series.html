@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="./assets/apple-touch-icon.png">
+    <link rel="stylesheet" href="./styles/series.css">
+    <title>Series</title>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-menu">
+            <div class="menu-item" id="home">
+                <img src="./assets/house2.png" alt="Home">
+            </div>
+            <div class="menu-item" id="search">
+                <img src="./assets/search3.png" alt="Search">
+                <input type="text" placeholder="Search for movies or TV series..." id="search-input">
+                <div id="search-results-container" class="hidden"></div>
+            </div>
+            <div class="menu-item" id="instagram">
+                <img src="./assets/Instagram_logo_2016.svg.webp" alt="instagram">
+            </div>
+            <div class="menu-item" id="github">
+                <img src="./assets/Github-desktop-logo-symbol.svg.png" alt="github">
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="series-details" id="series-details">
+            <!-- Series details will be dynamically loaded here -->
+        </div>
+    </div>
+    <script type="module" src="/dist/series.js"></script>
+</body>
+
+</html>
