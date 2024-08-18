@@ -48,7 +48,7 @@ export function populateMediaList(media, containerId) {
         console.error(`Media list element with ID '${containerId}' not found`);
         return;
     }
-    mediaList.innerHTML = ''; // Clear the list before adding new items
+    mediaList.innerHTML = '';
     if (media.length === 0) {
         mediaList.innerHTML = '<p>No media found</p>';
         return;
@@ -165,5 +165,14 @@ export function initializeEventListeners() {
 document.addEventListener("DOMContentLoaded", () => {
     loadMediaSections();
     initializeEventListeners();
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then((registration) => {
+            console.log('Service Worker registered with scope:', registration.scope);
+        })
+            .catch((error) => {
+            console.log('Service Worker registration failed:', error);
+        });
+    }
 });
 //# sourceMappingURL=main.js.map

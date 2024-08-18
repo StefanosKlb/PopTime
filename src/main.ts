@@ -63,7 +63,7 @@ export function populateMediaList(media: Media[], containerId: string) {
         return;
     }
 
-    mediaList.innerHTML = ''; // Clear the list before adding new items
+    mediaList.innerHTML = '';
 
     if (media.length === 0) {
         mediaList.innerHTML = '<p>No media found</p>';

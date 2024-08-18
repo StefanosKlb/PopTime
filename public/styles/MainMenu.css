@@ -3,7 +3,7 @@ body {
     background-color: #481E14;
     color: #ffffff;
     margin: 0;
-    padding: 0;
+    padding-top: 75px;
 }
 
 .navbar {
@@ -12,9 +12,13 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 100;
+    width: 100%;
+    /* Ensure the navbar spans the full width of the screen */
+    z-index: 1000;
+    /* Ensure the navbar stays on top of other elements */
+    flex-wrap: wrap;
 }
 
 .navbar-menu {
@@ -26,13 +30,11 @@ body {
     display: flex;
     align-items: center;
     margin-right: 15px;
-    /* Slightly larger margin */
     cursor: pointer;
 }
 
 .menu-item img {
     width: 40px;
-    /* Increased size */
     height: 40px;
     margin-right: 12px;
 }
@@ -43,21 +45,19 @@ body {
 
 #search {
     position: relative;
-    flex-grow: 1;
-    max-width: 400px;
-    /* Increased max width */
+    
+    max-width: 500px;
     transition: all 0.3s ease;
     display: flex;
     justify-content: flex-end;
+    /* Changed from flex-end to center */
 }
 
 #search input {
     display: none;
     width: 0;
     padding: 8px;
-    /* Increased padding */
     font-size: 1.1em;
-    /* Increased font size */
     border: none;
     border-radius: 5px;
     transition: width 0.3s ease-in-out;
@@ -65,15 +65,15 @@ body {
 }
 
 #search input:focus {
-    width: 400px;
-    /* Match the increased max width */
+    width: 100%;
     box-sizing: border-box;
 }
 
 #search.expanded input {
     display: inline-block;
     width: 100%;
-    max-width: 400px;
+    max-width: 300px;
+    /* Adjusted width to prevent full expansion */
     background-color: whitesmoke;
     color: #000;
 }
@@ -81,7 +81,6 @@ body {
 #search-results-container {
     position: absolute;
     top: 45px;
-    /* Adjusted to avoid overlapping */
     left: 0;
     width: 100%;
     background-color: #481E14;
@@ -101,7 +100,6 @@ body {
     display: flex;
     align-items: center;
     padding: 12px;
-    /* Slightly increased padding */
     cursor: pointer;
 }
 
@@ -111,7 +109,6 @@ body {
 
 .search-result-item img {
     width: 55px;
-    /* Increased size */
     height: 80px;
     margin-right: 18px;
     border-radius: 5px;
@@ -119,7 +116,6 @@ body {
 
 .search-result-item h3 {
     font-size: 1.1em;
-    /* Slightly increased font size */
     margin: 0;
     flex-grow: 1;
     color: rgb(255, 5, 5);
@@ -140,12 +136,10 @@ h1 {
     text-align: center;
     margin-bottom: 20px;
     font-size: 2.8em;
-    /* Increased font size */
 }
 
 h2 {
     font-size: 1.7em;
-    /* Increased font size */
     margin-bottom: 10px;
     color: #ffffff;
 }
@@ -158,10 +152,8 @@ h2 {
 
 .button-bar button {
     padding: 12px 24px;
-    /* Increased padding */
     margin: 0 12px;
     font-size: 1.1em;
-    /* Increased font size */
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -179,7 +171,6 @@ h2 {
     flex-wrap: nowrap;
     overflow-x: auto;
     gap: 25px;
-    /* Increased gap */
     padding: 12px 0;
     scroll-behavior: smooth;
     -ms-overflow-style: none;
@@ -196,12 +187,9 @@ h2 {
 .media-item {
     flex: 0 0 auto;
     width: 200px;
-    /* Increased size */
     max-width: 220px;
     padding: 18px;
-    /* Increased padding */
     padding-bottom: 45px;
-    /* Increase padding at the bottom */
     border-radius: 10px;
     text-align: center;
     background-color: #1f1f1f;
@@ -220,12 +208,10 @@ h2 {
     object-fit: cover;
     border-radius: 5px;
     margin-bottom: 12px;
-    /* Slightly increased margin */
 }
 
 .media-item h3 {
     font-size: 1.2em;
-    /* Increased font size */
     margin: 10px 0;
     color: #ffffff;
     word-wrap: break-word;
@@ -239,11 +225,6 @@ h2 {
     h1 {
         font-size: 2.5em;
     }
-
-    .media-item {
-        max-width: 200px;
-        padding-bottom: 45px;
-    }
 }
 
 @media (max-width: 992px) {
@@ -254,11 +235,6 @@ h2 {
     h1 {
         font-size: 2.3em;
     }
-
-    .media-item {
-        max-width: 180px;
-        padding-bottom: 45px;
-    }
 }
 
 @media (max-width: 768px) {
@@ -268,11 +244,6 @@ h2 {
 
     h1 {
         font-size: 2em;
-    }
-
-    .media-item {
-        max-width: 160px;
-        padding-bottom: 45px;
     }
 
     .navbar {
@@ -287,14 +258,12 @@ h2 {
 
     #search {
         order: 1;
-        /* Ensure search bar is last in the navbar */
         width: 100%;
-        margin-top: 10px;
+        margin-right: 30px;
     }
 
     #search.expanded input {
         max-width: 100%;
-        /* Make search input full width on small screens */
     }
 }
 
@@ -307,18 +276,12 @@ h2 {
         font-size: 1em;
     }
 
-    .media-item {
-        max-width: 140px;
-        padding-bottom: 45px;
-    }
-
     .menu-item {
         margin-right: 8px;
     }
 
     .menu-item img {
         width: 30px;
-        /* Slightly larger for better visibility */
         height: 30px;
     }
 }

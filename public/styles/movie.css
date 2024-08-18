@@ -3,19 +3,22 @@ body {
     background-color: #481E14;
     color: #ffffff;
     margin: 0;
-    padding: 0;
+    padding-top: 75px;
 }
 
 .navbar {
     background-color: #0C0C0C;
     padding: 18px;
-    /* Increased padding */
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    position: sticky;
+    justify-content: space-between;
+    position: fixed;
     top: 0;
+    width: 100%;
+    /* Ensure the navbar spans the full width of the screen */
     z-index: 1000;
+    /* Ensure the navbar stays on top of other elements */
+    flex-wrap: wrap;
 }
 
 .navbar-menu {
@@ -26,15 +29,13 @@ body {
 .menu-item {
     display: flex;
     align-items: center;
-    margin-right: 25px;
-    /* Increased margin */
+    margin-right: 15px;
     cursor: pointer;
 }
 
 .menu-item img {
-    width: 42px;
-    /* Increased size */
-    height: 42px;
+    width: 40px;
+    height: 40px;
     margin-right: 12px;
 }
 
@@ -44,20 +45,19 @@ body {
 
 #search {
     position: relative;
-    flex-grow: 1;
-    justify-content: flex-end;
-    max-width: 350px;
-    /* Increased max width */
+
+    max-width: 500px;
     transition: all 0.3s ease;
+    display: flex;
+    justify-content: flex-end;
+    /* Changed from flex-end to center */
 }
 
 #search input {
     display: none;
     width: 0;
     padding: 8px;
-    /* Increased padding */
     font-size: 1.1em;
-    /* Increased font size */
     border: none;
     border-radius: 5px;
     transition: width 0.3s ease-in-out;
@@ -65,36 +65,22 @@ body {
 }
 
 #search input:focus {
-    width: 350px;
-    /* Increased width on focus */
+    width: 100%;
     box-sizing: border-box;
-}
-
-#search.expanded {
-    max-width: 350px;
 }
 
 #search.expanded input {
     display: inline-block;
+    width: 100%;
+    max-width: 300px;
+    /* Adjusted width to prevent full expansion */
     background-color: whitesmoke;
-    overflow: hidden;
-    white-space: nowrap;
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
-    width: 350px;
-    /* Match the increased max width */
-}
-
-#search.expanded input::-webkit-scrollbar {
-    display: none;
-    /* Chrome, Safari, and Opera */
+    color: #000;
 }
 
 #search-results-container {
     position: absolute;
-    top: 100%;
+    top: 45px;
     left: 0;
     width: 100%;
     background-color: #481E14;
@@ -102,8 +88,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     z-index: 1000;
-    max-height: 450px;
-    /* Slightly increased max height */
+    max-height: 400px;
     overflow-y: auto;
 }
 
@@ -115,7 +100,6 @@ body {
     display: flex;
     align-items: center;
     padding: 12px;
-    /* Increased padding */
     cursor: pointer;
 }
 
@@ -124,16 +108,14 @@ body {
 }
 
 .search-result-item img {
-    width: 60px;
-    /* Increased size */
-    height: 90px;
+    width: 55px;
+    height: 80px;
     margin-right: 18px;
     border-radius: 5px;
 }
 
 .search-result-item h3 {
-    font-size: 1.2em;
-    /* Increased font size */
+    font-size: 1.1em;
     margin: 0;
     flex-grow: 1;
     color: rgb(255, 5, 5);
@@ -142,10 +124,8 @@ body {
 .container {
     width: 90%;
     max-width: 1300px;
-    /* Slightly increased max width */
     margin: 0 auto;
     padding: 25px;
-    /* Increased padding */
 }
 
 .movie-details {
@@ -156,44 +136,59 @@ body {
     display: flex;
     flex-direction: column;
     gap: 25px;
-    /* Increased gap */
     margin-bottom: 25px;
 }
 
 .movie-content img {
     width: 100%;
     max-width: 240px;
-    /* Increased max width */
     border-radius: 10px;
-    /* Increased border radius */
     height: auto;
+}
+
+.movie-content span {
+    position: absolute;
+    /* Changed to absolute positioning */
+    top: 135%;
+    /* Adjusted to place under the image */
+    left: 27%;
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Added background for better visibility */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    border: 30px;
 }
 
 .movie-text {
     display: flex;
     flex-direction: column;
     gap: 25px;
-    /* Increased gap */
 }
 
 .movie-text iframe {
     width: 100%;
     max-width: 1300px;
-    /* Slightly increased max width */
     height: auto;
     aspect-ratio: 16 / 9;
     border: none;
+    border-radius: 10px;
+    /* Added border-radius for smoother look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Added shadow for depth */
 }
 
 .movie-details h1 {
     font-size: 2.8em;
-    /* Increased font size */
+    margin-bottom: 15px;
+    /* Added margin for separation */
 }
 
 .movie-details .details {
     margin-top: 25px;
-    /* Increased margin */
 }
+
+/* Media Queries */
 
 @media (min-width: 768px) {
     .movie-content {
@@ -203,7 +198,6 @@ body {
 
     .movie-content img {
         max-width: 240px;
-        /* Match increased size */
     }
 
     .movie-text {
@@ -212,24 +206,103 @@ body {
 
     .movie-details h1 {
         font-size: 3em;
-        /* Increased font size */
+    }
+}
+
+@media (max-width: 1200px) {
+    .media-item {
+        max-width: 200px;
+        padding-bottom: 45px;
+    }
+
+    .movie-details h1 {
+        font-size: 2.5em;
+    }
+}
+
+@media (max-width: 992px) {
+    .media-item {
+        max-width: 180px;
+        padding-bottom: 45px;
+    }
+
+    .movie-details h1 {
+        font-size: 2.3em;
     }
 }
 
 @media (max-width: 767px) {
     .movie-details h1 {
         font-size: 2.2em;
-        /* Increased font size */
     }
 
     .movie-content {
         flex-direction: column;
         gap: 15px;
-        /* Increased gap */
     }
 
     .movie-content img {
         max-width: 120px;
-        /* Increased size */
+    }
+
+    .movie-content span {
+        top: 79%;
+        /* Adjusted for smaller screens */
+        left: 150px;
+        font-size: 0.8em;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar-menu {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    #search {
+        order: 1;
+        /* Ensure search bar is last in the navbar */
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    #search.expanded input {
+        max-width: 100%;
+        /* Make search input full width on small screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .media-item {
+        max-width: 140px;
+        padding-bottom: 45px;
+    }
+
+    .media-item h3 {
+        font-size: 1em;
+    }
+
+    .movie-details h1 {
+        font-size: 2em;
+    }
+
+    .menu-item {
+        margin-right: 8px;
+    }
+
+    .menu-item img {
+        width: 30px;
+        height: 30px;
+    }
+
+    #search {
+        max-width: 100%;
+    }
+
+    #search input {
+        width: 100%;
     }
 }
