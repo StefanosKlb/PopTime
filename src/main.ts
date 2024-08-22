@@ -88,7 +88,6 @@ export function createSearchResultItem(item: Media) {
     const resultItem = document.createElement("div");
     resultItem.className = "search-result-item";
 
-    // Transform and deliver the image via Cloudinary
     const resultPoster = document.createElement("img");
     resultPoster.src = cloudinaryUrl(item.posterPath);
     resultPoster.alt = item.title;
@@ -108,6 +107,7 @@ export function createSearchResultItem(item: Media) {
 export function cloudinaryUrl(posterPath: string): string {
     return `https://res.cloudinary.com/dx5z8qoag/image/fetch/f_auto,q_auto,w_500/https://image.tmdb.org/t/p/original${posterPath}`;
 }
+
 export function handleSearch(query: string) {
     const searchResultsContainer = document.getElementById("search-results-container");
     if (query.trim().length === 0) {
