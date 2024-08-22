@@ -36,7 +36,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         movieDetailsElement.innerHTML = `
             <div class="movie-content">
                 <div class="movie-text">
-                    <iframe src="https://vidsrc.cc/v2/embed/movie/${movieId}" allowfullscreen frameborder="0"></iframe>
+                    <iframe
+                        src="https://vidsrc.cc/v2/embed/movie/${movieId}" 
+                        allow="fullscreen; accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen 
+                        frameborder="0">
+                    </iframe>
                     <h1>${movie.title}</h1>
                     <p>${movie.overview}</p>
                     <img src="${posterUrl}" alt="${movie.title}">
