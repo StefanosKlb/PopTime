@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             <div class="movie-content">
                 <div class="movie-text">
                     <iframe
-                        src="https://vidsrc.cc/v2/embed/movie/${movieId}" 
+                        src="https://vidsrc2.to/embed/movie/${movieId}" 
                         allow="fullscreen; accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen 
                         frameborder="0">
