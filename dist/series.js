@@ -27,7 +27,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         seriesDetailsElement.innerHTML = `
             <div class="series-content">
                 <div class="series-text">
-                    <iframe id="series-iframe" src="https://vidsrc.xyz/embed/tv/${seriesId}" frameborder="0"></iframe>
+                    <iframe
+                        src="https://vidsrc.xyz/embed/tv/${seriesId}" 
+                        allow="fullscreen; accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen="true"
+                        frameborder="0">
+                    </iframe>
                     <h1>${series.name}</h1>
                     <p>${series.overview}</p>
                     <div class="select-container">

@@ -67,7 +67,6 @@ export function createSearchResultItem(item) {
     const searchResultsContainer = document.getElementById("search-results-container");
     const resultItem = document.createElement("div");
     resultItem.className = "search-result-item";
-    // Transform and deliver the image via Cloudinary
     const resultPoster = document.createElement("img");
     resultPoster.src = cloudinaryUrl(item.posterPath);
     resultPoster.alt = item.title;
