@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <iframe
                         src="https://vidsrc.xyz/embed/tv/${seriesId}" 
                         allow="fullscreen; accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen 
+                        allowfullscreen="true"
                         frameborder="0">
                     </iframe>
                     <h1>${series.name}</h1>
