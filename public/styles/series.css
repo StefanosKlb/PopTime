@@ -83,7 +83,7 @@ body {
     top: 45px;
     left: 0;
     width: 100%;
-    background-color: #481E14;
+    background-color: black;
     color: #000000;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
@@ -118,7 +118,7 @@ body {
     font-size: 1.1em;
     margin: 0;
     flex-grow: 1;
-    color: rgb(255, 5, 5);
+    color: #FF3333;
 }
 
 .container {
