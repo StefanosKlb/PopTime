@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         seriesDetailsElement.innerHTML = `
             <div class="series-content">
                 <div class="series-text">
-                    <iframe
+                    <iframe id="series-iframe"
                         src="https://vidsrc.cc/v2/embed/tv/${seriesId}" 
                         allow="fullscreen; accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                         frameborder="0">
